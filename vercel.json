@@ -6,7 +6,7 @@
       "use": "@vercel/python"
     },
     {
-      "src": "PROJECT/**",
+      "src": "*.{html,css,js,svg}",
       "use": "@vercel/static"
     }
   ],
@@ -17,11 +17,11 @@
     },
     {
       "src": "/static/(.*)",
-      "dest": "PROJECT/$1"
+      "dest": "$1"
     },
     {
       "src": "/(.*)",
-      "dest": "PROJECT/$1"
+      "dest": "$1"
     }
   ],
   "functions": {

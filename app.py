@@ -367,20 +367,20 @@ def health_check():
 @app.route('/')
 def index():
     """Serve the main page"""
-    return send_file('PROJECT/index.html')
+    return send_file('index.html')
 
 @app.route('/static/<path:filename>')
 def static_files(filename):
     """Serve static files"""
-    return send_file(f'PROJECT/{filename}')
+    return send_file(filename)
 
 @app.route('/<path:filename>')
 def serve_frontend_files(filename):
     """Serve frontend files"""
     try:
-        return send_file(f'PROJECT/{filename}')
+        return send_file(filename)
     except:
-        return send_file('PROJECT/index.html')
+        return send_file('index.html')
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
