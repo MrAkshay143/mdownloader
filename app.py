@@ -382,6 +382,9 @@ def serve_frontend_files(filename):
     except:
         return send_file('index.html')
 
+# Export the app for Vercel
+application = app
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
