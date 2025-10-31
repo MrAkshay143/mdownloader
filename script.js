@@ -176,9 +176,12 @@ class YouTubeDownloader {
         }
     }
 
-    displayVideoInfo(info) {
+    displayVideoInfo(data) {
         // Store video info for use in other methods
-        this.videoInfo = info;
+        this.videoInfo = data;
+        
+        // Extract the info object from the response
+        const info = data.info;
         
         // Update video metadata
         document.getElementById('video-title').textContent = info.title;
@@ -193,10 +196,10 @@ class YouTubeDownloader {
         const videoGrid = document.getElementById('video-formats-grid');
         videoGrid.innerHTML = '';
 
-        if (info.formats.video.length === 0) {
+        if (data.formats.video.length === 0) {
             videoGrid.innerHTML = '<p class="no-formats">No MP4 video qualities available for this video.</p>';
         } else {
-            info.formats.video.forEach(format => {
+            data.formats.video.forEach(format => {
                 const btn = document.createElement('button');
                 btn.className = 'format-btn';
                 btn.dataset.formatId = format.format_id;
@@ -234,18 +237,18 @@ class YouTubeDownloader {
 
         // Use audio formats from API response if available, otherwise fallback to defaults
         const audioFormats = this.videoInfo?.formats?.audio || [
-            { quality: '128 kbps', format_id: 'bestaudio[abr<=128]', filesize: null },
-            { quality: '192 kbps', format_id: 'bestaudio[abr<=192]', filesize: null },
-            { quality: '256 kbps', format_id: 'bestaudio[abr<=256]', filesize: null },
-            { quality: '320 kbps', format_id: 'bestaudio', filesize: null }
+            { quality: '128kbps', format_id: 'bestaudio[abr<=128]', filesize: null },
+            { quality: '192kbps', format_id: 'bestaudio[abr<=192]', filesize: null },
+            { quality: '256kbps', format_id: 'bestaudio[abr<=256]', filesize: null },
+            { quality: '320kbps', format_id: 'bestaudio', filesize: null }
         ];
 
         audioFormats.forEach(format => {
             const btn = document.createElement('button');
             btn.className = 'format-btn';
             
-            // Extract bitrate from quality string (e.g., "128 kbps" -> "128")
-            const bitrate = format.quality.replace(' kbps', '');
+            // Extract bitrate from quality string (e.g., "128kbps" or "128 kbps" -> "128")
+            const bitrate = format.quality.replace(/\s*kbps/i, '');
             btn.dataset.bitrate = bitrate;
             
             // Get quality description
