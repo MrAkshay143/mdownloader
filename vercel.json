@@ -12,12 +12,24 @@
       "dest": "app.py"
     },
     {
+      "src": "/health",
+      "dest": "app.py"
+    },
+    {
       "src": "/",
-      "dest": "/index.html"
+      "dest": "app.py"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/$1"
+    },
+    {
+      "src": "/(.*\\.(css|js|html|svg|ico|png|jpg|jpeg|gif|woff|woff2|ttf|eot))",
+      "dest": "/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/$1"
+      "dest": "app.py"
     }
   ],
   "env": {
