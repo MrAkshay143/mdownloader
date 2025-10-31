@@ -59,3 +59,4 @@ node_modules/
 
 # Documentation directory (contains yt-dlp source with test secrets)
 DOCUMETS/
+.vercel
