@@ -42,7 +42,7 @@ class ProgressHook:
                 'filename': d.get('filename', '')
             }
 
-def get_ydl_opts(output_path=None, format_selector=None, cookies=None, use_firefox_cookies=False):
+def get_ydl_opts(output_path=None, format_selector=None, cookies=None):
     """Get yt-dlp options with common settings"""
     opts = {
         'quiet': True,
@@ -64,9 +64,7 @@ def get_ydl_opts(output_path=None, format_selector=None, cookies=None, use_firef
     if format_selector:
         opts['format'] = format_selector
     
-    if use_firefox_cookies:
-        opts['cookies_from_browser'] = ('firefox',)
-    elif cookies:
+    if cookies:
         opts['cookiefile'] = cookies
     
     return opts
@@ -78,7 +76,6 @@ def get_video_info():
         # Handle different request formats (JSON, form data, or query params)
         url = None
         cookies = None
-        use_firefox_cookies = False
         
         # Try to get URL and cookies from JSON data first
         if request.is_json:
@@ -87,7 +84,6 @@ def get_video_info():
                 if data:
                     url = data.get('url', '').strip()
                     cookies = data.get('cookies')
-                    use_firefox_cookies = data.get('use_firefox_cookies', False)
             except Exception as e:
                 logger.error(f"JSON parsing error: {str(e)}")
         
@@ -107,9 +103,14 @@ def get_video_info():
             return jsonify({'error': 'Invalid URL format'}), 400
         
         temp_cookie_file = None
-        if use_firefox_cookies:
-            ydl_opts = get_ydl_opts(use_firefox_cookies=True)
-        elif cookies:
+        
+        # Default to using cookies.txt if it exists
+        if os.path.exists('cookies.txt'):
+            ydl_opts = get_ydl_opts(cookies='cookies.txt')
+        else:
+            ydl_opts = get_ydl_opts()
+
+        if cookies:
             try:
                 # Create a temporary file to store the cookies
                 with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt', encoding='utf-8') as temp_file:
@@ -120,8 +121,6 @@ def get_video_info():
             except Exception as e:
                 logger.error(f"Failed to create temporary cookie file: {e}")
                 return jsonify({'error': 'Failed to process cookies'}), 500
-        else:
-            ydl_opts = get_ydl_opts()
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             try:

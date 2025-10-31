@@ -138,8 +138,7 @@ class YouTubeDownloader {
     async getVideoFormats() {
         const url = document.getElementById('youtube-url').value.trim();
         const cookies = document.getElementById('youtube-cookies').value.trim();
-        const useFirefoxCookies = document.getElementById('use-firefox-cookies').checked;
-
+        
         if (!url) {
             this.showError('Please enter a valid media URL');
             return;
@@ -151,11 +150,7 @@ class YouTubeDownloader {
         this.hideVideoInfo();
 
         try {
-            const requestBody = JSON.stringify({ 
-                url: url, 
-                cookies: cookies,
-                use_firefox_cookies: useFirefoxCookies 
-            });
+            const requestBody = JSON.stringify({ url: url, cookies: cookies });
             const apiUrl = API_CONFIG.getApiUrl('/api/info');
             
             const response = await fetch(apiUrl, {
