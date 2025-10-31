@@ -70,8 +70,25 @@ def get_ydl_opts(output_path=None, format_selector=None):
 def get_video_info():
     """Get video information and available formats"""
     try:
-        data = request.get_json()
-        url = data.get('url', '').strip()
+        # Handle different request formats (JSON, form data, or query params)
+        url = None
+        
+        # Try to get URL from JSON data first
+        if request.is_json:
+            try:
+                data = request.get_json()
+                if data:
+                    url = data.get('url', '').strip()
+            except Exception as e:
+                logger.error(f"JSON parsing error: {str(e)}")
+        
+        # If no URL from JSON, try form data
+        if not url:
+            url = request.form.get('url', '').strip()
+        
+        # If still no URL, try query parameters
+        if not url:
+            url = request.args.get('url', '').strip()
         
         if not url:
             return jsonify({'error': 'URL is required'}), 400
