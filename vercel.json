@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "PROJECT/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "app.py"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "PROJECT/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "PROJECT/$1"
+    }
+  ],
+  "functions": {
+    "app.py": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "PYTHONPATH": "."
+  }
+}

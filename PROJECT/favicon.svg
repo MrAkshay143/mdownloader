@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#cc0000;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- YouTube-style play button background -->
+  <rect x="2" y="8" width="20" height="14" rx="2" ry="2" fill="url(#grad1)" stroke="#990000" stroke-width="0.5"/>
+  
+  <!-- Play triangle -->
+  <polygon points="8,12 8,20 16,16" fill="white"/>
+  
+  <!-- Download arrow -->
+  <g transform="translate(20, 4)">
+    <!-- Arrow shaft -->
+    <rect x="4" y="2" width="2" height="8" fill="#333" rx="1"/>
+    <!-- Arrow head -->
+    <polygon points="2,8 5,12 8,8" fill="#333"/>
+    <!-- Download base line -->
+    <rect x="1" y="13" width="8" height="1.5" fill="#333" rx="0.5"/>
+  </g>
+</svg>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Video Downloader - Download Videos from YouTube, TikTok, Vimeo & More</title>
+    <meta name="description" content="Free online video downloader supporting YouTube, TikTok, Vimeo and more platforms. Download videos in multiple quality options with fast and secure processing.">
+    <meta name="keywords" content="video downloader, YouTube downloader, TikTok downloader, Vimeo downloader, online video download, free video downloader, MP4 download, MP3 download">
+    <meta name="author" content="Akshay Mondal">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.svg">
+    <link rel="mask-icon" href="favicon.svg" color="#ff0000">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Video Downloader - Download Videos from YouTube, TikTok, Vimeo & More">
+    <meta property="og:description" content="Free online video downloader supporting YouTube, TikTok, Vimeo and more platforms. Download videos in multiple quality options with fast and secure processing.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/">
+    <meta property="og:site_name" content="Video Downloader">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Video Downloader - Download Videos from YouTube, TikTok, Vimeo & More">
+    <meta name="twitter:description" content="Free online video downloader supporting YouTube, TikTok, Vimeo and more platforms. Download videos in multiple quality options with fast and secure processing.">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Video Downloader">
+    
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-download"></i>
+                    <h1>Video Downloader</h1>
+                </div>
+                <div class="header-info">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <span class="version">v2.0</span>
+        </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Home Page -->
+            <div id="home-page" class="page active">
+                <div class="input-section">
+                    <div class="input-group">
+                        <input type="text" id="youtube-url" placeholder="Paste video link here (YouTube, Vimeo, TikTok, etc.)..." />
+                        <button id="get-formats-btn" class="primary-btn">
+                            <i class="fas fa-download"></i> Fetch Media
+                        </button>
+                    </div>
+                </div>
+
+                <div id="loading" class="loading hidden">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Fetching formats...</p>
+                </div>
+
+                <div id="error-message" class="error-message hidden"></div>
+
+                <!-- Welcome Content Card -->
+                <div id="welcome-card" class="welcome-card">
+                    <div class="welcome-header">
+                        <i class="fas fa-download"></i>
+                        <h3>Media Downloader</h3>
+                    </div>
+                    <p class="welcome-description">Download videos and audio from popular platforms</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Support for YouTube, TikTok, Vimeo & more</li>
+                        <li><i class="fas fa-check"></i> Multiple quality options available</li>
+                        <li><i class="fas fa-check"></i> Fast and secure downloads</li>
+                        <li><i class="fas fa-check"></i> No registration required</li>
+                    </ul>
+                </div>
+
+                <div id="video-info" class="video-info hidden">
+                    <div class="video-meta">
+                        <img id="video-thumbnail" src="" alt="Video thumbnail" />
+                        <div class="meta-details">
+                            <h3 id="video-title"></h3>
+                            <p id="video-uploader"></p>
+                            <p id="video-duration"></p>
+                        </div>
+                    </div>
+
+                    <div class="format-tabs">
+                        <button class="tab-btn active" data-tab="video">
+                            <i class="fas fa-video"></i> Video (MP4)
+                        </button>
+                        <button class="tab-btn" data-tab="audio">
+                            <i class="fas fa-music"></i> Audio (MP3)
+                        </button>
+                    </div>
+
+                    <div id="video-formats" class="format-list active">
+                        <div class="formats-grid" id="video-formats-grid"></div>
+                    </div>
+
+                    <div id="audio-formats" class="format-list">
+                        <div class="formats-grid" id="audio-formats-grid">
+                            <!-- MP3 quality buttons will be dynamically generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+
+        <!-- Developer Credit Footer -->
+        <footer class="developer-credit">
+            <div class="credit-content">
+                <p class="credit-text">
+                    <i class="fas fa-code"></i> 
+                    Developed by <strong>Akshay Mondal</strong>
+                </p>
+            </div>
+        </footer>
+
+        <!-- Bottom Navigation Dock -->
+        <nav class="bottom-dock">
+            <a href="/" class="nav-btn active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="/recent" class="nav-btn" data-page="recent">
+                <i class="fas fa-history"></i>
+                <span>Recent</span>
+            </a>
+            <a href="/settings" class="nav-btn" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Download Modal -->
+    <div id="download-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Downloading...</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="download-progress">
+                    <i class="fas fa-download fa-2x"></i>
+                    <p>Preparing your download...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="config.js?v=3"></script>
+    <script src="theme.js?v=3"></script>
+    <script src="script.js?v=3"></script>
+</body>
+</html>

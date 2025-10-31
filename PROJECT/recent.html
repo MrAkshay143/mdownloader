@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Recent Downloads - Video Downloader</title>
+    <meta name="description" content="View your recent video downloads from YouTube, TikTok, Vimeo and other platforms. Access your download history and re-download videos easily.">
+    <meta name="keywords" content="recent downloads, download history, video downloader history, YouTube downloads, TikTok downloads">
+    <meta name="author" content="Akshay Mondal">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.svg">
+    <link rel="mask-icon" href="favicon.svg" color="#ff0000">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Recent Downloads - Video Downloader">
+    <meta property="og:description" content="View your recent video downloads from YouTube, TikTok, Vimeo and other platforms. Access your download history and re-download videos easily.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="/recent">
+    <meta property="og:site_name" content="Video Downloader">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#3b82f6">
+    
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-download"></i>
+                    <h1>Video Downloader</h1>
+                </div>
+                <div class="header-info">
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <i class="fas fa-moon"></i>
+            </button>
+            <span class="version">v2.0</span>
+        </div>
+            </div>
+        </header>
+
+        <main>
+            <!-- Recent Page -->
+            <div id="recent-page" class="page active">
+                <div class="page-header">
+                    <h2><i class="fas fa-history"></i> Recent Downloads</h2>
+                    <button id="clear-all-btn" class="danger-btn">
+                        <i class="fas fa-trash"></i> Clear All
+                    </button>
+                </div>
+                
+                <div id="recent-empty" class="empty-state">
+                    <i class="fas fa-download"></i>
+                    <p>No recent downloads on this device.</p>
+                </div>
+
+                <div id="recent-list" class="recent-list"></div>
+            </div>
+        </main>
+
+        <!-- Developer Credit Footer -->
+        <footer class="developer-credit">
+            <div class="credit-content">
+                <p class="credit-text">
+                    <i class="fas fa-code"></i> 
+                    Developed by <strong>Akshay Mondal</strong>
+                </p>
+            </div>
+        </footer>
+
+        <!-- Bottom Navigation Dock -->
+        <nav class="bottom-dock">
+            <a href="/" class="nav-btn" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="/recent" class="nav-btn active" data-page="recent">
+                <i class="fas fa-history"></i>
+                <span>Recent</span>
+            </a>
+            <a href="/settings" class="nav-btn" data-page="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="/static/config.js"></script>
+    <script src="/static/theme.js"></script>
+    <script src="/static/recent.js?v=2"></script>
+</body>
+</html>

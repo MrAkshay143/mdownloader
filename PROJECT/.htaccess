@@ -1,0 +1,35 @@
+RewriteEngine On
+
+# Handle client-side routing for SPA-like behavior
+# Redirect /recent to /recent.html
+RewriteRule ^recent/?$ /recent.html [L]
+
+# Redirect /settings to /settings.html  
+RewriteRule ^settings/?$ /settings.html [L]
+
+# Optional: Redirect root to index.html (usually not needed)
+# RewriteRule ^$ /index.html [L]
+
+# Fallback for any other routes - redirect to index
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L]
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Cache static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+</IfModule>
