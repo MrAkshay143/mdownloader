@@ -4,10 +4,6 @@
     {
       "src": "app.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "*.{html,css,js,svg}",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -16,19 +12,10 @@
       "dest": "app.py"
     },
     {
-      "src": "/static/(.*)",
-      "dest": "$1"
-    },
-    {
       "src": "/(.*)",
-      "dest": "$1"
+      "dest": "/$1"
     }
   ],
-  "functions": {
-    "app.py": {
-      "maxDuration": 30
-    }
-  },
   "env": {
     "PYTHONPATH": "."
   }
