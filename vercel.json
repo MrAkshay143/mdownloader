@@ -4,6 +4,22 @@
     {
       "src": "app.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.svg",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -16,16 +32,44 @@
       "dest": "app.py"
     },
     {
+      "src": "/style.css",
+      "dest": "/style.css"
+    },
+    {
+      "src": "/config.js",
+      "dest": "/config.js"
+    },
+    {
+      "src": "/script.js",
+      "dest": "/script.js"
+    },
+    {
+      "src": "/theme.js",
+      "dest": "/theme.js"
+    },
+    {
+      "src": "/recent.js",
+      "dest": "/recent.js"
+    },
+    {
+      "src": "/settings.js",
+      "dest": "/settings.js"
+    },
+    {
+      "src": "/favicon.svg",
+      "dest": "/favicon.svg"
+    },
+    {
+      "src": "/recent.html",
+      "dest": "/recent.html"
+    },
+    {
+      "src": "/settings.html",
+      "dest": "/settings.html"
+    },
+    {
       "src": "/",
       "dest": "app.py"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*\\.(css|js|html|svg|ico|png|jpg|jpeg|gif|woff|woff2|ttf|eot))",
-      "dest": "/$1"
     },
     {
       "src": "/(.*)",
