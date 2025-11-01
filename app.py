@@ -115,18 +115,26 @@ def get_video_info():
             logger.error(f"Invalid URL format: {url}")
             return jsonify({'error': 'Invalid URL format'}), 400
         
-        # Default to using cookies.txt if it exists (Vercel serverless environment)
-        cookies_path = 'cookies.txt'
-        logger.info(f"Checking for cookies file at: {cookies_path}")
-        logger.info(f"Current working directory: {os.getcwd()}")
-        logger.info(f"Files in current directory: {os.listdir('.')}")
+        # In Vercel serverless environment, disable cookies entirely to avoid file system issues
+        # Check if we're in a serverless environment (Vercel sets VERCEL environment variable)
+        is_vercel = os.environ.get('VERCEL') == '1'
         
-        if os.path.exists(cookies_path):
-            logger.info(f"Found cookies.txt file, size: {os.path.getsize(cookies_path)} bytes")
-            ydl_opts = get_ydl_opts(cookies=cookies_path)
+        if is_vercel:
+            logger.info("Running in Vercel serverless environment - disabling cookies")
+            ydl_opts = get_ydl_opts()  # No cookies
         else:
-            logger.warning("cookies.txt file not found, proceeding without cookies")
-            ydl_opts = get_ydl_opts()
+            # Local environment - try to use cookies.txt if it exists
+            cookies_path = 'cookies.txt'
+            logger.info(f"Checking for cookies file at: {cookies_path}")
+            logger.info(f"Current working directory: {os.getcwd()}")
+            logger.info(f"Files in current directory: {os.listdir('.')}")
+            
+            if os.path.exists(cookies_path):
+                logger.info(f"Found cookies.txt file, size: {os.path.getsize(cookies_path)} bytes")
+                ydl_opts = get_ydl_opts(cookies=cookies_path)
+            else:
+                logger.warning("cookies.txt file not found, proceeding without cookies")
+                ydl_opts = get_ydl_opts()
 
         # Note: In Vercel serverless environment, we can't create temporary files
         # so we ignore any cookies passed in the request and use the deployed cookies.txt
