@@ -115,9 +115,7 @@ def get_video_info():
             logger.error(f"Invalid URL format: {url}")
             return jsonify({'error': 'Invalid URL format'}), 400
         
-        temp_cookie_file = None
-        
-        # Default to using cookies.txt if it exists
+        # Default to using cookies.txt if it exists (Vercel serverless environment)
         cookies_path = 'cookies.txt'
         logger.info(f"Checking for cookies file at: {cookies_path}")
         logger.info(f"Current working directory: {os.getcwd()}")
@@ -130,19 +128,11 @@ def get_video_info():
             logger.warning("cookies.txt file not found, proceeding without cookies")
             ydl_opts = get_ydl_opts()
 
+        # Note: In Vercel serverless environment, we can't create temporary files
+        # so we ignore any cookies passed in the request and use the deployed cookies.txt
         if cookies:
-            try:
-                logger.info("Creating temporary cookie file from provided cookies")
-                # Create a temporary file to store the cookies
-                with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt', encoding='utf-8') as temp_file:
-                    temp_file.write(cookies)
-                    temp_cookie_file = temp_file.name
-                
-                ydl_opts = get_ydl_opts(cookies=temp_cookie_file)
-                logger.info(f"Created temporary cookie file: {temp_cookie_file}")
-            except Exception as e:
-                logger.error(f"Failed to create temporary cookie file: {e}")
-                return jsonify({'error': 'Failed to process cookies'}), 500
+            logger.info("Cookies provided in request, but using deployed cookies.txt instead (serverless limitation)")
+            # Still use the existing ydl_opts which may already have cookies.txt configured
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             try:
@@ -254,14 +244,6 @@ def get_video_info():
                 import traceback
                 logger.error(f"Traceback: {traceback.format_exc()}")
                 return jsonify({'error': f'Failed to process video: {str(e)}'}), 500
-            finally:
-                # Clean up the temporary cookie file
-                if temp_cookie_file and os.path.exists(temp_cookie_file):
-                    try:
-                        os.remove(temp_cookie_file)
-                        logger.info(f"Cleaned up temporary cookie file: {temp_cookie_file}")
-                    except Exception as e:
-                        logger.error(f"Failed to clean up temporary cookie file: {e}")
                 
     except Exception as e:
         logger.error(f"General error: {str(e)}")
