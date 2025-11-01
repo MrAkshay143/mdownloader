@@ -150,6 +150,14 @@ def get_video_info():
                 info = ydl.extract_info(url, download=False)
                 logger.info("yt-dlp extraction completed successfully")
                 
+                # Check if extraction actually succeeded
+                if info is None:
+                    logger.error("yt-dlp returned None - video extraction failed (likely due to authentication requirements)")
+                    return jsonify({
+                        'error': 'Video extraction failed. This may be due to authentication requirements or the video being unavailable.',
+                        'success': False
+                    }), 400
+                
                 # Extract basic video information
                 video_info = {
                     'id': info.get('id', ''),
