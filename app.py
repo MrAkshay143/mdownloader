@@ -73,6 +73,11 @@ def get_ydl_opts(output_path=None, format_selector=None, cookies=None):
 def get_video_info():
     """Get video information and available formats"""
     try:
+        logger.info("API /info endpoint called")
+        logger.info(f"Request method: {request.method}")
+        logger.info(f"Request content type: {request.content_type}")
+        logger.info(f"Request headers: {dict(request.headers)}")
+        
         # Handle different request formats (JSON, form data, or query params)
         url = None
         cookies = None
@@ -81,50 +86,71 @@ def get_video_info():
         if request.is_json:
             try:
                 data = request.get_json()
+                logger.info(f"JSON data received: {data}")
                 if data:
                     url = data.get('url', '').strip()
                     cookies = data.get('cookies')
             except Exception as e:
                 logger.error(f"JSON parsing error: {str(e)}")
+                logger.error(f"Raw request data: {request.get_data()}")
         
         # If no URL from JSON, try form data
         if not url:
             url = request.form.get('url', '').strip()
+            logger.info(f"Form data URL: {url}")
         
         # If still no URL, try query parameters
         if not url:
             url = request.args.get('url', '').strip()
+            logger.info(f"Query param URL: {url}")
+        
+        logger.info(f"Final URL extracted: {url}")
         
         if not url:
+            logger.error("No URL provided in request")
             return jsonify({'error': 'URL is required'}), 400
         
         # Validate URL
         if not re.match(r'^https?://', url):
+            logger.error(f"Invalid URL format: {url}")
             return jsonify({'error': 'Invalid URL format'}), 400
         
         temp_cookie_file = None
         
         # Default to using cookies.txt if it exists
-        if os.path.exists('cookies.txt'):
-            ydl_opts = get_ydl_opts(cookies='cookies.txt')
+        cookies_path = 'cookies.txt'
+        logger.info(f"Checking for cookies file at: {cookies_path}")
+        logger.info(f"Current working directory: {os.getcwd()}")
+        logger.info(f"Files in current directory: {os.listdir('.')}")
+        
+        if os.path.exists(cookies_path):
+            logger.info(f"Found cookies.txt file, size: {os.path.getsize(cookies_path)} bytes")
+            ydl_opts = get_ydl_opts(cookies=cookies_path)
         else:
+            logger.warning("cookies.txt file not found, proceeding without cookies")
             ydl_opts = get_ydl_opts()
 
         if cookies:
             try:
+                logger.info("Creating temporary cookie file from provided cookies")
                 # Create a temporary file to store the cookies
                 with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt', encoding='utf-8') as temp_file:
                     temp_file.write(cookies)
                     temp_cookie_file = temp_file.name
                 
                 ydl_opts = get_ydl_opts(cookies=temp_cookie_file)
+                logger.info(f"Created temporary cookie file: {temp_cookie_file}")
             except Exception as e:
                 logger.error(f"Failed to create temporary cookie file: {e}")
                 return jsonify({'error': 'Failed to process cookies'}), 500
         
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             try:
+                logger.info(f"Starting yt-dlp extraction for URL: {url}")
+                logger.info(f"yt-dlp options: {ydl_opts}")
+                
                 info = ydl.extract_info(url, download=False)
+                logger.info("yt-dlp extraction completed successfully")
                 
                 # Extract basic video information
                 video_info = {
@@ -142,11 +168,14 @@ def get_video_info():
                     'thumbnails': info.get('thumbnails', [])
                 }
                 
+                logger.info(f"Extracted video info: {video_info['title']} by {video_info['uploader']}")
+                
                 # Extract video formats
                 video_formats = []
                 audio_formats = []
                 
                 formats = info.get('formats', [])
+                logger.info(f"Found {len(formats)} total formats")
                 
                 # Process video formats
                 seen_video_qualities = set()
@@ -191,6 +220,8 @@ def get_video_info():
                 video_formats.sort(key=lambda x: x.get('height', 0), reverse=True)
                 audio_formats.sort(key=lambda x: x.get('abr', 0), reverse=True)
                 
+                logger.info(f"Processed {len(video_formats)} video formats and {len(audio_formats)} audio formats")
+                
                 # If no separate audio formats, create standard audio options
                 if not audio_formats:
                     audio_formats = [
@@ -199,29 +230,44 @@ def get_video_info():
                         {'quality': '192kbps', 'format_id': 'bestaudio', 'ext': 'mp3'},
                         {'quality': '128kbps', 'format_id': 'bestaudio', 'ext': 'mp3'}
                     ]
+                    logger.info("Added default audio formats")
                 
-                return jsonify({
+                response_data = {
                     'success': True,
                     'info': video_info,
                     'formats': {
                         'video': video_formats[:10],  # Limit to top 10 video formats
                         'audio': audio_formats[:6]    # Limit to top 6 audio formats
                     }
-                })
+                }
+                
+                logger.info("Successfully prepared response data")
+                return jsonify(response_data)
                 
             except yt_dlp.DownloadError as e:
                 logger.error(f"yt-dlp error: {str(e)}")
+                logger.error(f"yt-dlp error type: {type(e)}")
                 return jsonify({'error': f'Failed to extract video info: {str(e)}'}), 400
             except Exception as e:
                 logger.error(f"Extraction error: {str(e)}")
+                logger.error(f"Extraction error type: {type(e)}")
+                import traceback
+                logger.error(f"Traceback: {traceback.format_exc()}")
                 return jsonify({'error': f'Failed to process video: {str(e)}'}), 500
             finally:
                 # Clean up the temporary cookie file
                 if temp_cookie_file and os.path.exists(temp_cookie_file):
-                    os.remove(temp_cookie_file)
+                    try:
+                        os.remove(temp_cookie_file)
+                        logger.info(f"Cleaned up temporary cookie file: {temp_cookie_file}")
+                    except Exception as e:
+                        logger.error(f"Failed to clean up temporary cookie file: {e}")
                 
     except Exception as e:
         logger.error(f"General error: {str(e)}")
+        logger.error(f"General error type: {type(e)}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
         return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/api/download/video', methods=['POST'])
