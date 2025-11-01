@@ -137,6 +137,7 @@ class YouTubeDownloader {
 
     async getVideoFormats() {
         const url = document.getElementById('youtube-url').value.trim();
+        const cookies = document.getElementById('cookies').value.trim();
         
         if (!url) {
             this.showError('Please enter a valid media URL');
